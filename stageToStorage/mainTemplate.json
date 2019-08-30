@@ -12,7 +12,10 @@
             "name": "child-template",
             "properties": {
                 "mode": "Incremental",
-                "childTemplate": "[uri(deployment().properties.templateLink.uri, 'artifacts/myChildTemplate.json')]",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/myChildTemplate.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
                 "parameters": {}
             }
         },
