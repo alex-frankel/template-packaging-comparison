@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "child-template",
+            "properties": {
+                "mode": "Incremental",
+                "childTemplate": "artifacts/mychildtemplate.json", // this will be syntactic sugar if it is not in a template spec resource
+                // will be converted to [uri(deployment().properties.templateLink.uri, 'artifacts/init.sh')]
+                "parameters": {}
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2017-03-30",
+            "name": "vm-001",
+            "location": "eastus",
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.8",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": ["[ContentArtifact('artifacts/script.sh').uri]"], // would this also be syntactic sugar for "[uri(deployment().properties.templateLink.uri, 'scripts/init.sh')]"?
+                    "commandToExecute": "bash init.sh"
+                },
+                "protectedSettings": {}
+            }
+        }
+    ],
+    "outputs": {}
+}
