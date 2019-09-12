@@ -1,13 +1,8 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "_sasToken": {
-            "type":
-        }
-    },
-    "variables": {
-    },
+    "parameters": {},
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
@@ -16,13 +11,27 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "relativePath": "artifacts/mychildtemplate.json",// this will be syntactic sugar if it is not in a template spec resource
+                    "relativePath": "artifacts/temp1.json", // this will be syntactic sugar if it is not in a template spec resource
                     // will be converted to "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/init.sh')]"
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {}
             }
         },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "child-template",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "relativePath": "artifacts/temp2.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {}
+            }
+        },
+        /*
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2017-03-30",
@@ -40,6 +49,7 @@
                 "protectedSettings": {}
             }
         }
+        */
     ],
     "outputs": {}
 }

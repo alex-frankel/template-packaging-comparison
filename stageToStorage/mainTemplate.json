@@ -13,12 +13,27 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/myChildTemplate.json')]",
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/temp1.json')]",
+                    // I wonder if we can use the second argument as the reference to the child template?
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {}
             }
         },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "child-template",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/temp2.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {}
+            }
+        }
+        /*
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2017-03-30",
@@ -36,6 +51,7 @@
                 "protectedSettings": {}
             }
         }
+        */
     ],
     "outputs": {}
 }

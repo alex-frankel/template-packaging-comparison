@@ -47,6 +47,7 @@
         },
         "artifacts": [
             {
+                // could also call this 'name' if we don't do the relativePath strategy
                 "relativePath": "./artifacts/temp1", // this is the identifier for each artifact, will also be how we export correctly
                 "artifactKind": "TemplateArtifact",
                 "template": {
