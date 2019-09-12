@@ -1,0 +1,72 @@
+{
+    "type": "Microsoft.Resources/templateSpecs",
+    "apiVersion": "2019-09-01",
+    "name": "my-temp-spec",
+    "properties": {
+        "template": { // could be templateUri as well
+            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+            "contentVersion": "1.0.0.0",
+            "resources": [
+                {
+                    "type": "Microsoft.Resources/deployments",
+                    "apiVersion": "2018-05-01",
+                    "name": "child-template",
+                    "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "relativePath": "artifacts/temp1.json",// this will be syntactic sugar if it is not in a template spec resource
+                            // will be converted to "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/init.sh')]"
+                            "contentVersion": "1.0.0.0"
+                        },
+                        "parameters": {}
+                    }
+                },
+                {
+                    "type": "Microsoft.Resources/deployments",
+                    "apiVersion": "2018-05-01",
+                    "name": "child-template",
+                    "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "relativePath": "artifacts/temp2.json",// this will be syntactic sugar if it is not in a template spec resource
+                            // will be converted to "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/init.sh')]"
+                            "contentVersion": "1.0.0.0"
+                        },
+                        "parameters": {}
+                    }
+                }
+            ]
+        },
+        "uiDefinition": {
+            "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+            "handler": "Microsoft.Compute.MultiVm",
+            "version": "0.1.2-preview",
+            "parameters": {
+                "basics": [],
+                "steps": [],
+                "outputs": {}
+            }
+        },
+        "artifacts": [
+            {
+                // does this have a name property? how is it referenced by the parent template? by relative path?
+                "artifactKind": "TemplateArtifact",
+                "relativePath": "./artifacts/temp1",
+                "template": {
+                    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+                    "contentVersion": "1.0.0.0",
+                    "resources": []
+                }
+            },
+            {
+                "artifactKind": "TemplateArtifact",
+                "relativePath": "./artifacts/temp2",
+                "template": {
+                    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+                    "contentVersion": "1.0.0.0",
+                    "resources": []
+                }
+            }
+        ]
+    }
+}

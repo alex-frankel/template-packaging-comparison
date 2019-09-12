@@ -1,0 +1,455 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Resource Management Client with Template Specs resource type",
+    "description": "The APIs listed in this specification can be used to manage Template Specs resource through the Azure Resource Manager.",
+    "version": "2019-09-01-preview"
+  },
+  "host": "management.azure.com",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "azure_auth": [
+        "user_impersonation"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "azure_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://login.microsoftonline.com/common/oauth2/authorize",
+      "flow": "implicit",
+      "description": "Azure Active Directory OAuth2 Flow",
+      "scopes": {
+        "user_impersonation": "impersonate your user account"
+      }
+    }
+  },
+  "paths": {
+    "/{scope}/providers/Microsoft.Resources/templates/{templateSpecName}": {
+      "put": {
+        "tags": [
+          "TemplateSpecs"
+        ],
+        "operationId": "TemplateSpecs_CreateOrUpdate",
+        "description": "Creates or updates a template spec at the given scope.",
+        "x-ms-examples": {
+          "TemplatesCreateUpdate": {
+            "$ref": "./examples/TemplateSpecsCreate.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/TemplateSpecsNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "name": "templateSpec",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TemplateSpecModel"
+            },
+            "description": "Template spec supplied to the operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/TemplateSpecModel"
+            }
+          },
+          "201": {
+            "description": "Template created.",
+            "schema": {
+              "$ref": "#/definitions/TemplateSpecModel"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "TemplateSpecs"
+        ],
+        "operationId": "TemplateSpecs_Get",
+        "description": "Gets a template spec at the given scope by the template name.",
+        "x-ms-examples": {
+          "TemplatesGet": {
+            "$ref": "./examples/TemplateSpecsGet.json"
+          },
+          "TemplatesGetWithExpand": {
+            "$ref": "./examples/TemplateSpecsGetWithExpand.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/TemplateSpecsNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          },
+          {
+            "name": "$expand",
+            "description": "May be used to expand the get operation to return valid scopes for the template spec.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Returns information about the template spec.",
+            "schema": {
+              "$ref": "#/definitions/TemplateSpecModel"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TemplateSpecs"
+        ],
+        "operationId": "TemplateSpecs_Delete",
+        "description": "Deletes a template spec at the given scope. When operation completes, status code 200 returned without content.",
+        "x-ms-examples": {
+          "TemplatesDelete": {
+            "$ref": "./examples/TemplateSpecsDelete.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/TemplateSpecsNameParameter"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Template spec deleted."
+          },
+          "204": {
+            "description": "Template spec does not exist."
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          } 
+        }
+      }
+    }, 
+    "/{scope}/providers/Microsoft.Resources/templates/": {
+      "get": {
+        "tags": [
+          "TemplateSpecs"
+        ],
+        "operationId": "TemplateSpecs_ListAtScope",
+        "description": "Lists all the template specs at the given scope.",
+        "x-ms-examples": {
+          "TemplatesList": {
+            "$ref": "./examples/TemplateSpecsList.json"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/ScopeParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Returns an array of template specs.",
+            "schema": {
+              "$ref": "#/definitions/TemplateSpecsListResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/DefaultErrorResponse"
+            }
+          }
+        }, 
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    }
+  },     
+  "definitions": {
+    "TemplateSpecModel": {
+      "required": [
+        "properties"
+      ],
+      "type": "object",
+      "description": "Template spec object.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AzureResourceBase"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "description": "Template spec properties.",
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/TemplateSpecProperties"
+        }
+      }
+    },
+    "TemplateArtifact": {
+      "type": "object",
+      "description": "Represents a template artifact. ",
+      "properties": {
+        "relativePath": {
+          "type": "string",
+          "description": "Relative path to the template."
+        },
+        "artifactKind": {
+          "$ref": "#/definitions/ArtifactKind"
+        },
+  	    "template": {
+          "type": "object",
+          "description": "Properties for a template artifact."
+        }  
+      }
+    },
+    "ContentArtifact": {
+      "type": "object",
+      "description": "Content artifact object.",
+      "properties": { 
+        "relativePath": {
+          "type": "string",
+          "description": "Relative path to the template."
+        },
+        "artifactKind": {
+          "$ref": "#/definitions/ArtifactKind"
+        }
+      }
+    },
+    "ArtifactKind": {
+      "type": "string",
+      "description": "Specifies the kind of artifact.",
+      "enum": [
+        "template",
+        "content"
+      ],
+      "x-ms-enum": {
+       "name": "ArtifactKind",
+        "modelAsString": true
+      }
+    },
+    "TemplateSpecProperties": {
+      "required": [
+        "template" 
+      ],
+      "type": "object",
+      "description": "Template spec properties.",
+      "properties": {
+        "contentSourceUri": "{uri}", 
+        "templateContent": { 
+          "type": "object",
+          "description": "The template spec content."
+        },
+        "artifacts": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TemplateSpecArtifact"
+          }
+        },
+        "timeCreated": {          
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time",
+          "description": "The timestamp of the template spec creation."
+        },
+        "lastModified": {
+          "type": "string",          
+          "readOnly": true,
+          "format": "date-time",
+          "description": "The timestamp of the last time template spec was modified."
+        },
+        "scopes": {
+          "type": "array",
+          "readOnly": true,
+          "description": "The scopes that the template spec is valid at. Scopes are not populated by default. The $expand='scopes' query string parameter allows to request inclusion of valid scopes in the response payload.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Subscription",
+              "ManagementGroup",
+              "ResourceGroup",
+              "Tenant",
+              "Unknown"
+            ],
+            "x-ms-enum": {
+              "name": "Scope",
+              "modelAsString": true,
+              "values": [
+                {
+                  "value": "Subscription",
+                  "description": "The template spec is valid at subscription scope."
+                },
+                {
+                  "value": "ManagementGroup",
+                  "description": "The template spec is valid at management group scope."
+                },
+                {
+                  "value": "ResourceGroup",
+                  "description": "The template spec is valid at resource group scope."
+                },
+                {
+                  "value": "Tenant",
+                  "description": "The template spec is valid at tenant scope."
+                },
+                {
+                  "value": "Unknown",
+                  "description": "Cannot determine a valid scope for the template spec."
+                }
+              ]
+            }
+          }
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 4096,
+          "description": "Template spec description."
+        }
+      },
+      "uiDefinition": {
+        "type": "object",
+        "description": "UI definition that Azure Portal can use instead of the default experience."
+      }
+    },
+    "TemplatesListResult": {
+      "description": "List of templates specs.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TemplateSpecModel"
+          },
+          "description": "An array of templates."
+        },
+        "nextLink": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The URL to use for getting the next set of results."
+        }
+      }      
+    },
+    "AzureResourceBase": {
+      "x-ms-azure-resource": true,
+      "type": "object",
+      "description": "Common properties for all Azure resources.",
+      "properties": {
+        "id": {
+          "readOnly": true,
+          "type": "string",
+          "description": "String Id used to locate any resource on Azure."
+        },
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Name of this resource."
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Type of this resource."
+        }
+      }
+    },
+    "DefaultErrorResponse": {
+      "description": "The details of the error.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "One of a server-defined set of error codes.",
+          "type": "string"
+        },
+        "message": {
+          "description": "A human-readable representation of the error.",
+          "type": "string"
+        },
+        "target": {
+          "description": "The target of the particular error.",
+          "type": "string"
+        },
+        "details": {
+          "description": "Detailed errors.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DefaultErrorResponse"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "ScopeParameter": {
+      "name": "scope",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The scope of the resource. Valid scopes are: subscription (format: '/subscriptions/{subscriptionId}'), management group (format: '/providers/Microsoft.Management/managementGroups/{managementGroupId}'), and resource group (format: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}').",
+      "x-ms-parameter-location": "method",
+      "x-ms-skip-url-encoding": true
+    },
+    "TemplateSpecsNameParameter": {
+      "name": "templateSpecName",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "pattern": "^[-\\w\\._\\(\\)]+$",
+      "description": "Name of the template spec.",
+      "minLength": 1,
+      "maxLength": 64,
+      "x-ms-parameter-location": "method"
+    },
+    "ApiVersionParameter": {
+      "name": "api-version",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "client",
+      "description": "Client Api version."
+    }
+  }
+}
