@@ -1,37 +1,44 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "_sasToken": {
+            "type": "string",
+            "defaultValue": ""
+        }
+    },
     "variables": {},
     "resources": [
+        // w/o back-compat
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
-            "name": "child-template",
+            "name": "temp1",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "relativePath": "artifacts/temp1.json", // this will be syntactic sugar if it is not in a template spec resource
-                    // will be converted to "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/init.sh')]"
+                    "relativePath": "artifacts/temp1.json", 
+                    // converted to: "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/temp1.json')]"
+                    "contentVersion": "1.0.0.0" // do we still need this? isn't content version declared in the template?
+                },
+                "parameters": {}
+            }
+        },
+        // w/ back-compat
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "temp2",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "relativePath": "[concat('artifacts/temp2.json', parameters('_sasToken'))]",
+                    // converted to: "uri": "[concat(uri(deployment().properties.templateLink.uri, 'artifacts/temp2.json'), parameters('_sasToken'))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {}
             }
         },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-05-01",
-            "name": "child-template",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "relativePath": "artifacts/temp2.json",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {}
-            }
-        },
-        /*
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2017-03-30",
@@ -43,13 +50,14 @@
                 "typeHandlerVersion": "1.8",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
-                    "fileUris": ["[ContentArtifact('artifacts/script.sh').uri]"], // would this also be syntactic sugar for "[uri(deployment().properties.templateLink.uri, 'scripts/init.sh')]"?
+                    // back-compat with a sasToken
+                    "fileUris": ["[ContentArtifact('artifacts/script.sh', parameters('_sasToken')).uri]"], 
+                    // converts to: "fileUris": ["[concat(uri(deployment().properties.templateLink.uri, 'scripts/init.sh'), parameters('_sasToken'))]"],
                     "commandToExecute": "bash init.sh"
                 },
                 "protectedSettings": {}
             }
         }
-        */
     ],
     "outputs": {}
 }
