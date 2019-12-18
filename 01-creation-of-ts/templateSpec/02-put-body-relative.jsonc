@@ -1,5 +1,5 @@
 {
-    "type": "Microsoft.Resources/templateSpecs",
+    "type": "Microsoft.Resources/templateSpecs/versions/1.0", // templateSpec content is in the version
     "apiVersion": "2019-09-01",
     "name": "my-temp-spec",
     "properties": {
@@ -14,8 +14,7 @@
                     "properties": {
                         "mode": "Incremental",
                         "templateLink": {
-                            "relativePath": "artifacts/temp1.json",// this will be syntactic sugar if it is not in a template spec resource
-                            // will be converted to "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/init.sh')]"
+                            "relativePath": "artifacts/temp1.json",
                             "contentVersion": "1.0.0.0"
                         },
                         "parameters": {}
@@ -28,8 +27,7 @@
                     "properties": {
                         "mode": "Incremental",
                         "templateLink": {
-                            "relativePath": "artifacts/temp2.json",// this will be syntactic sugar if it is not in a template spec resource
-                            // will be converted to "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/init.sh')]"
+                            "relativePath": "./artifacts/temp2.json",
                             "contentVersion": "1.0.0.0"
                         },
                         "parameters": {}
@@ -49,7 +47,6 @@
         },
         "artifacts": [
             {
-                // does this have a name property? how is it referenced by the parent template? by relative path?
                 "artifactKind": "TemplateArtifact",
                 "relativePath": "./artifacts/temp1",
                 "template": {

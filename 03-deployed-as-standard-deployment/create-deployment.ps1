@@ -1,0 +1,1 @@
+New-AzGroupDeployment -ResourceGroup "alex-test-001" -TemplateFile "./mainTemplate.json"

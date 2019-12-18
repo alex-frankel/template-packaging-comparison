@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "_sasToken": {
+            "type": "string",
+            "defaultValue": ""
+        }
+    },
+    "variables": {},
+    "resources": [
+        // w/o back-compat
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "temp1",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/temp1.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {}
+            }
+        },
+        // w/ back-compat
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "temp2",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(uri(deployment().properties.templateLink.uri, 'artifacts/temp2.json'), parameters('_sasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {}
+            }
+        }
+    ],
+    "outputs": {}
+}
